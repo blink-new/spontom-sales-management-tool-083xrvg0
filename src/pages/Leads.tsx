@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -36,21 +36,6 @@ export function Leads() {
   }, [])
 
   useEffect(() => {
-    filterLeads()
-  }, [filterLeads])
-
-  const loadLeads = async () => {
-    try {
-      const data = await blink.db.leads.list({
-        orderBy: { created_at: 'desc' }
-      })
-      setLeads(data)
-    } catch (error) {
-      console.error('Error loading leads:', error)
-    }
-  }
-
-  const filterLeads = useCallback(() => {
     let filtered = leads
 
     if (searchTerm) {
@@ -67,6 +52,17 @@ export function Leads() {
 
     setFilteredLeads(filtered)
   }, [leads, searchTerm, statusFilter])
+
+  const loadLeads = async () => {
+    try {
+      const data = await blink.db.leads.list({
+        orderBy: { created_at: 'desc' }
+      })
+      setLeads(data)
+    } catch (error) {
+      console.error('Error loading leads:', error)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

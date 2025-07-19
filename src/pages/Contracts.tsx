@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -34,21 +34,6 @@ export function Contracts() {
   }, [])
 
   useEffect(() => {
-    filterContracts()
-  }, [filterContracts])
-
-  const loadContracts = async () => {
-    try {
-      const data = await blink.db.contracts.list({
-        orderBy: { created_at: 'desc' }
-      })
-      setContracts(data)
-    } catch (error) {
-      console.error('Error loading contracts:', error)
-    }
-  }
-
-  const filterContracts = useCallback(() => {
     let filtered = contracts
 
     if (searchTerm) {
@@ -65,6 +50,17 @@ export function Contracts() {
 
     setFilteredContracts(filtered)
   }, [contracts, searchTerm, statusFilter])
+
+  const loadContracts = async () => {
+    try {
+      const data = await blink.db.contracts.list({
+        orderBy: { created_at: 'desc' }
+      })
+      setContracts(data)
+    } catch (error) {
+      console.error('Error loading contracts:', error)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
